@@ -1,0 +1,43 @@
+POST https://gw.xiaocantech.com/rpc HTTP/1.1
+Host: gw.xiaocantech.com
+Connection: keep-alive
+Content-Length: 108
+appid: 20
+x-Vayne: 490465
+x-Annie: XC
+xweb_xhr: 1
+x-Teemo: 556479056
+X-Ashe: 496c766d40caf8f830391bc72c4bd319
+X-Model: microsoft microsoft
+Content-Type: application/json
+X-Nami: 28d2556479056c76
+X-Platform: mini
+X-Version: 3.15.9.10
+serverName: SilkwormFusion
+x-Sivir: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJVc2VySWQiOjQ5MDQ2NSwiZXhwIjoxNzgwODMyNzc3fQ.OKMVOdwpYsNlkpXyc-j5XlNj8EjzDevHlu4Pzl-S_ZQ
+methodName: FusionService.GetFeedPromotions
+x-City: 130681
+X-Garen: 1777716950366
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/132.0.0.0 Safari/537.36 MicroMessenger/7.0.20.1781(0x6700143B) NetType/WIFI MiniProgramEnv/Windows WindowsWechat/WMPF WindowsWechat(0x63090a13) UnifiedPCWindowsWechat(0xf254186b) XWEB/19481
+version: 3.15.9.10
+Accept: */*
+Sec-Fetch-Site: cross-site
+Sec-Fetch-Mode: cors
+Sec-Fetch-Dest: empty
+Referer: https://servicewechat.com/wx52ae177248081591/740/page-frame.html
+Accept-Encoding: gzip, deflate, br
+Accept-Language: zh-CN,zh;q=0.9
+
+{"silk_id":556479056,"lon":115.974388,"lat":39.485291,"number":20,"offset":0,"sort":0,"scene":1,"app_id":20}
+HTTP/1.1 200 OK
+Date: Sat, 02 May 2026 10:15:50 GMT
+Content-Type: application/json
+Content-Length: 9847
+Connection: keep-alive
+Access-Control-Allow-Credentials: true
+Access-Control-Allow-Headers: Accept, Content-Type, Content-Length, Accept-Encoding, X-CSRF-Token, Authorization, Access-Control-Allow-Origin, X-Teemo, X-Platform, X-Nami, X-Garen, X-Ashe, x-Annie, servername, methodname, env, X-Version, X-Sivir, X-Vayne, X-City, X-Nautilus, X-Thresh, X-TerraceId, X-Openapi-Uid, Xc-Openapi-User, Xc-Openapi-Token, Xc-Openapi-Token-Expire, Xc-Openapi-Ns, Xc-Openapi-Ts, Xc-Openapi-Ti
+Access-Control-Allow-Methods: POST, PATCH, GET, OPTIONS, PUT, DELETE
+Access-Control-Allow-Origin: *
+Access-Control-Expose-Headers: Xc-Openapi-Token, Xc-Openapi-Token-Expire
+
+{"status":{"code":0},"feed_items":[{"store":{"id":1871102,"name":"贝壳风铃·冰淇淋蛋糕（涿州店）","longitude":115.996341,"latitude":39.485831,"address":"涿州市范阳酒店(范阳中路北)","address_detail":"河北省保定市涿州市清凉寺街道范阳中路75号北侧","icon":"http://p0.meituan.net/business/a4331134c4631976406b2ebfcfae3f58839054.png","category_sub_type":3,"opening_hours":"00:00-23:59","store_info":{"meituan_info":{"meituan_poi_id":"-100"},"if_advance":true}},"promotion_id":105820399,"store_id":1871102,"store_platform":1,"order_money":10000,"user_rebate":5100,"left_number":4,"start_time_hour":"00:00","end_time_hour":"23:59","start_timestamp":1777651200,"end_timestamp":1777737540,"rebate_condition":2,"tags":["多图多字，图片请勿重复"],"status":2,"store_product":{},"distance":1884,"source":1,"promotion_condition":{},"platform_promotion_status":1,"meituan_shop_url":"贝壳风铃·冰淇淋蛋糕（涿州店）","xc_category":"面包甜点:生日蛋糕","search_detail":{"nuw_zao":1,"hfhcw_zao":1,"hfmcw_zao":1,"hflcw_zao":1,"lpw_zao":1,"hphcw_zao":4,"hpmcw_zao":3,"hplcw_zao":4,"nuw_zheng":-1,"hfhcw_zheng":-1,"hfmcw_zheng":-1,"hflcw_zheng":-1,"lpw_zheng":-1,"hphcw_zheng":2,"hpmcw_zheng":1,"hplcw_zheng":2,"nuw_xia":1,"hfhcw_xia":1,"hfmcw_xia":1,"hflcw_xia":1,"lpw_xia":1,"hphcw_xia":4,"hpmcw_xia":3,"hplcw_xia":4}},
