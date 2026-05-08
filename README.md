@@ -179,4 +179,12 @@ print(data)
 
 
 
-# 分析数据
+# 项目常态化使用
+
+- 手动
+    1. windows系统设置 -> 网络和 internet -> 代理 -> 手动启用 `127.0.0.1:8080`
+    2. 运行 `cd C:\Users\raymo\rays\repos\_me\scraper-xiaocan; .\.venv\Scripts\activate.ps1; mitmdump -s xiaocan_semiauto.py --mode upstream:http://127.0.0.1:7897`
+        - ⚠️ 260506: 无法找到`系统代理关闭 & clash是TUN模式`时抓不到包的bug, 因此使用方法回退到`关闭clash + 运行时不用'--mode'参数`.
+    3. 打开微信小程序，进入小蚕，持续滚动商品列表，直到你觉得数据够了。
+    4. `Ctrl+C`终止命令, 目标表格将打印在命令行里.
+- 自动: 将手动方法封装成[pwsh函数](https://github.com/draymski/utils101/blob/main/src/utils101/shell_kit/general_funcs.ps1)中的`Invoke-Xcan`.
