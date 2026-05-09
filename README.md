@@ -1,10 +1,10 @@
-微信内部爬取
+爬虫研究
 
-# 获取数据
+# 研究阶段
 
-## 抓包法
+## 抓包
 
-### 用Fiddler抓包
+### Fiddler--Windows
 
 -  搭建Fiddler抓包环境
     - 安装并配置证书
@@ -27,11 +27,19 @@
         - url是: `rpc`
         - response body size很大, 且形如: `{"status":{"code":0},"feed_items":[{"store":{"id":1871102,"name":"店铺名","longitude":115.996341,"latitude":39.485831,"address":"地址"`
 
-### 获取response body
+### proxyman--Mac
 
-最简单且笨的方法是直接复制session里的response body来分析.   
-下面介绍另一种: `解密request-header`
-- 研究抓到的session里request的header和body, 破解其动态的`加密字段`, 就能直接模拟请求来获取响应了.
+阉割免费
+
+### Charles--老牌
+
+## 分析
+
+以`小蚕app/小程序外卖商品列表`分析为例
+
+### 分析request--很难放弃
+
+尝试通过解密`request-header&body`, 破解其动态的`加密字段`, 就能直接模拟请求来获取响应了.
 - ⚠️ 难点: 需要深入研究 MD5 算法, 逆向分析, 而 `脱壳 -> 搜索关键字符串（如 X-Ashe）-> 定位加密函数 -> 用 Python 改写或直接用 execjs 调用`这个流程对逆向小白来说很陌生, 很难.  
 
 ```http
@@ -80,24 +88,33 @@ Accept-Language: zh-CN,zh;q=0.9
 - [动态] X-Nami (娜美) —— 
 - methodName：这个字段非常重要，它告诉后台具体执行哪个函数。当前的 GetFeedPromotions 显然是获取促销/商品列表。
 
-## 半自动嗅探法
-> 半自动嗅探（Mitm-Sniffing）, 上面`抓包法`的进阶版.
+### 分析response
 
-优点: 不必费心研究请求头的`加密字段`, 零逆向成本.  
-注意:
-- 首次运行, 要在浏览器访问 `http://mitm.it`。下载并安装 Windows 版证书，存入 “受信任的根证书颁发机构”
+理解其数据结构后可编写爬虫逻辑
+
+# 实操阶段
+
+选择`手动刷新 + mitm嗅探 + 脚本采集`的半自动爬虫流程  
+此法的优势: 不必费心研究请求头的`加密字段`, 零逆向成本.  
+
+## 步骤
+
+- 安装: `uv tool install mitmproxy`, 将得到3个工具: mitmproxy, mitmdump, mitmweb
+- 构建解析逻辑: 把你想做的逻辑写入脚本里的`def response(flow: http.HTTPFlow)`
+- 启动进程: `mitmdump -s xiaocan_semiauto.py [--mode upstream:http://127.0.0.1:7897]`
+    - 默认下, mitmproxy服务静默在`8080`运行, LAN内所有设备都可使用该代理.  
+    - `mode`参数即`链式代理`, 是为了不影响系统内已经运行的代理服务(如 clash).  
+- 开启目标机器的代理: 把`127.0.0.1:8080`或`host_inet_ip:8080`写入你目标app/小程序/web所在设备的`系统代理中
+    - 如Windows: 系统设置 -> 网络和 internet -> 代理 -> 手动启用 
+    - 如Wi-Fi连接的macOS: 系统设置 -> 网络 -> Wi-Fi -> ℹ️ -> http代理 -> 手动 
+
+    > 爬虫时, 目标机器尽量不要有其他代理服务.
+    >   - 如果目标机器是`本机`, 本机clash开了TUN模式且不能关闭, 考虑`链式代理`
+- 目标机器装证书: 首次运行, 先去浏览器访问 `http://mitm.it`。下载并安装适合你OS的证书，存入 “受信任的根证书颁发机构”
     - url里有非常细致的装配教程
-    - 这步和 Fiddler 是一样的，没这步你解密不了 HTTPS
-
-### mitmproxy嗅探步骤
-
-- 安装: `uv tool install mitmproxy`, 它像命令行版本的fiddler, 将得到3个工具: mitmproxy, mitmdump, mitmweb
-- 把你想做的逻辑写入脚本里的`def response(flow: http.HTTPFlow)`
-- 启动: `mitmdump -s xiaocan_semiauto.py --mode upstream:http://127.0.0.1:7897`
-    - 默认下, mitmproxy服务静默在`8080`运行.  
-    - `mode`参数实现了`链式代理`, 是为了不影响系统内已经运行的代理服务(如 clash).  
-- 设置win11代理: 系统设置 -> 网络和 internet -> 代理 -> 手动启用 `127.0.0.1:8080`
-- 刷新小程序页面, 并持续滚动商品列表. 
+    - 没这步解密不了 HTTPS
+- 喂数据: 进入目标app, 刷新页面, 并持续滚动商品列表.
+- 停止进程
 
 ### 用于mitmdump的脚本设计
 
@@ -115,7 +132,19 @@ Accept-Language: zh-CN,zh;q=0.9
     *   **优雅展示**：使用 `pandas` 进行多列组合排序（实掏由低到高，返率由高到低），并通过 `tabulate` 在终端渲染精美的表格。
     *   **持久化**：自动生成 `today_results.csv`（UTF-8-BOM 编码），方便直接用 Excel 打开查阅。
 
+## 快速开始
 
+0. 环境准备: `git clone https://github.com/draymski/scraper-xiaocan.git; cd scraper-xiaocan; uv sync`
+1. 开启系统代理 (8080)
+2. 运行 `cd C:\Users\raymo\rays\repos\_me\scraper-xiaocan; .\.venv\Scripts\activate.ps1; mitmdump -s xiaocan_semiauto.py`
+    - ⚠️ 260506: 无法找到`系统代理关闭 & clash是TUN模式`时抓不到包的bug, 因此使用方法回退到`关闭clash + 运行时不用'--mode'参数`.
+3. 打开微信小程序，进入小蚕，持续滚动商品列表，直到你觉得数据够了。
+4. `Ctrl+C`终止命令, 目标表格将打印在命令行里.
+
+> 更自动的方法: 将上述`step1-2`封装成[pwsh函数](https://github.com/draymski/utils101/blob/main/src/utils101/shell_kit/general_funcs.ps1)中的`Invoke-Xcan`.
+
+
+# 其他爬虫手段探究
 
 ## RPC注入法
 
@@ -179,12 +208,3 @@ print(data)
 
 
 
-# 项目常态化使用
-
-- 手动
-    1. windows系统设置 -> 网络和 internet -> 代理 -> 手动启用 `127.0.0.1:8080`
-    2. 运行 `cd C:\Users\raymo\rays\repos\_me\scraper-xiaocan; .\.venv\Scripts\activate.ps1; mitmdump -s xiaocan_semiauto.py --mode upstream:http://127.0.0.1:7897`
-        - ⚠️ 260506: 无法找到`系统代理关闭 & clash是TUN模式`时抓不到包的bug, 因此使用方法回退到`关闭clash + 运行时不用'--mode'参数`.
-    3. 打开微信小程序，进入小蚕，持续滚动商品列表，直到你觉得数据够了。
-    4. `Ctrl+C`终止命令, 目标表格将打印在命令行里.
-- 自动: 将手动方法封装成[pwsh函数](https://github.com/draymski/utils101/blob/main/src/utils101/shell_kit/general_funcs.ps1)中的`Invoke-Xcan`.
