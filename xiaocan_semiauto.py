@@ -127,6 +127,10 @@ def done():
         # 美化
         df['distance'] = df['distance'].apply(lambda x: f"{float(x):.1f}k" if pd.notna(x) else "")
         df.columns = ['距离', '实掏', '低消', '返还', '返率', '余量', '店名']
+        
+        # 控制 CSV 中数值列的精度，保持与 log 打印的一致美观
+        df = df.round(2)
+        
         df.to_csv("today_results.csv", index=False, encoding="utf-8-sig")
         print(tabulate(df, headers='keys', tablefmt='grid', showindex=False, floatfmt=".2f"))
     except ImportError:

@@ -134,6 +134,7 @@ Accept-Language: zh-CN,zh;q=0.9
 
 ## 快速开始
 
+### 旧方法(deprecated)
 0. 环境准备: `git clone https://github.com/draymski/scraper-xiaocan.git; cd scraper-xiaocan; uv sync`
 1. 开启系统代理 (8080)
 2. 运行 `cd C:\Users\raymo\rays\repos\_me\scraper-xiaocan; .\.venv\Scripts\activate.ps1; mitmdump -s xiaocan_semiauto.py`
@@ -143,6 +144,24 @@ Accept-Language: zh-CN,zh;q=0.9
 
 > 更自动的方法: 将上述`step1-2`封装成[pwsh函数](https://github.com/draymski/utils101/blob/main/src/utils101/shell_kit/general_funcs.ps1)中的`Invoke-Xcan`.
 
+### 接入telegram-bot
+
+1. 服务端: 
+    - 拥有翻墙能力: `mihomo/7897`
+    - 让爬虫脚本后台常驻 `workdir=/home/ray/rays/repos/_me/scraper-xiaocan; nohup $workdir/.venv/bin/python $workdir/tg_bot.py > $workdir/xiaocan_bot.log 2>&1 &`
+        - 事先确保`mitmdump`没有独立进程
+2. 客户端: (以iphone场景下的`TG + tailscale + 被爬取app`为例)
+    1. TG独立接入`服务端`的翻墙能力: `server_tailnet_ip:7897` 
+    2. TG启动小蚕爬虫: 向bot发送`/xiaocan_bgn`
+    3. Wi-Fi里配置手动代理: `server_tailnet_ip:8080`
+        - ⚠️ 这里必须要求手机连入某个Wi-Fi, 不然没法给手机配置`系统HTTP代理`.   
+            当然数据流量下也能通过`VPN软件/模式`给它配代理, 但这会与`tailscale`抢通道
+    4. 进app刷商品列表
+    5. TG停止小蚕爬虫: 发送`/xiaocan_end`
+    6. Wi-Fi里关闭手动代理
+3. bingo
+
+> 速通版: bgn > 开8080 > 刷 > end > 关闭8080
 
 # 其他爬虫手段探究
 
