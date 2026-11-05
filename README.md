@@ -110,9 +110,12 @@ Accept-Language: zh-CN,zh;q=0.9
 
     > 爬虫时, 目标机器尽量不要有其他代理服务.
     >   - 如果目标机器是`本机`, 本机clash开了TUN模式且不能关闭, 考虑`链式代理`
-- 目标机器装证书: 首次运行, 先去浏览器访问 `http://mitm.it`。下载并安装适合你OS的证书，存入 “受信任的根证书颁发机构”
-    - url里有非常细致的装配教程
-    - 没这步解密不了 HTTPS
+- 目标机器安装CA证书: 先去浏览器访问 `http://mitm.it`。下载并安装适合你OS的证书，存入 “受信任的根证书颁发机构”
+    - 重要性: 没这步mitmdump进程无法与目标机器建立`SSL/TLS`连接, 解密不了 HTTPS
+    - 教程: url里有非常细致的装配教程
+    - 限制: 如果目标机器是iPhone, 需使用原生浏览器Safari
+    - 安装时机: 目标机器与`mitmdump`从未配过对时.
+        - 如果目标机器用的是新机器的`mitmproxy`, 那目标机器的旧证书要先删除. 
 - 喂数据: 进入目标app, 刷新页面, 并持续滚动商品列表.
 - 停止进程
 
@@ -134,6 +137,7 @@ Accept-Language: zh-CN,zh;q=0.9
 
 ## 快速开始
 
+<<<<<<< HEAD
 ### 旧方法(deprecated)
 0. 环境准备: `git clone https://github.com/draymski/scraper-xiaocan.git; cd scraper-xiaocan; uv sync`
 1. 开启系统代理 (8080)
@@ -141,8 +145,21 @@ Accept-Language: zh-CN,zh;q=0.9
     - ⚠️ 260506: 无法找到`系统代理关闭 & clash是TUN模式`时抓不到包的bug, 因此使用方法回退到`关闭clash + 运行时不用'--mode'参数`.
 3. 打开微信小程序，进入小蚕，持续滚动商品列表，直到你觉得数据够了。
 4. `Ctrl+C`终止命令, 目标表格将打印在命令行里.
+=======
+以使用场景`jdy启用服务+iPhone接入代理`为例：
+1. jdy
+    - 环境准备: `git clone https://github.com/draymski/scraper-xiaocan.git; cd scraper-xiaocan; uv sync`
+    - 运行 `cd ~/rays/repos/_me/scraper-xiaocan; source .venv/bin/activate; mitmdump -s xiaocan_semiauto.py`
+2. iphone(Wi-Fi下)
+    - 换VPN入网tailnet: settings -> VPN -> 开启 & 选择tailscale
+    - 启用新代理: settings -> WLAN -> 正用的Wi-Fi ℹ️ -> 配置代理 -> 手动:
+        - 100.127.149.38 : 8080
+    - (首次) Safari访问`mitm.it`, 按提示装证书
+    - 刷新目标app(小蚕)，持续滚动商品列表，直到你觉得数据够了。
+3. jdy`Ctrl+C`终止命令, 目标表格将打印在命令行里; iphone关闭`Wi-Fi的代理`.
+>>>>>>> d5cafd9 (-)
 
-> 更自动的方法: 将上述`step1-2`封装成[pwsh函数](https://github.com/draymski/utils101/blob/main/src/utils101/shell_kit/general_funcs.ps1)中的`Invoke-Xcan`.
+> 如果`step1-2`都在Windows环境, 我把执行步骤封装成[pwsh函数](https://github.com/draymski/utils101/blob/main/src/utils101/shell_kit/general_funcs.ps1)中的`Invoke-Xcan`, 可直接使用. 
 
 ### 接入telegram-bot
 
